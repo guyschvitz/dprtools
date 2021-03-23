@@ -1,9 +1,8 @@
-
 library(dprtools)
 library(tidyverse)
-
 setwd("~/Documents/ICR/github/dprtools/R")
 
+## File used to demonstrate functions (ReadMe) and generate example figures
 
 ################################################################################
 ## UnionDFs
@@ -151,11 +150,11 @@ my.df6$var3 <- ifelse(sample(c(T, F), size = out.len,
 ## Plot NA's
 plotNAs(my.df6)
 
-pdf("../demo/plotNAs.pdf", 7,5)
+png("../demo/plotNAs.png", width=2000, height = 1000, res = 300)
 plotNAs(my.df6)
 dev.off()
 
-pdf("../demo/plotNAs.pdf", 7,5)
+png("../demo/plotGroupedNAs.png", width=2000, height = 1000, res = 300)
 plotGroupedNAs(my.df6, year)
 dev.off()
 
@@ -164,58 +163,28 @@ dev.off()
 ## Demonstrate functions
 ################################################################################
 
-## Union dfs
-union(exmpl.df1, exmpl.df2)
-unionDFs(exmpl.df1, exmpl.df2, names(exmpl.df1), names(exmpl.df2))
-
 ## Chop Intervals
-exmpl.df1.chop <- chopIntervals(exmpl.df1, id, "start", "end")
+my.df1.chop <- chopIntervals(my.df1, id, "start", "end")
 
-exmpl.df1$version <- "Before"
-exmpl.df1.chop$version <- "After"
-exmpl.df1.full <- unionDFs(exmpl.df1, exmpl.df1.chop, names(exmpl.df1), names(exmpl.df1.chop))
+my.df1$version <- "Before"
+my.df1.chop$version <- "After"
+my.df1.out <- unionDFs(my.df1, my.df1.chop, names(my.df1), names(my.df1.chop))
 
 ## Plot results
 cols <- rev(viridis::viridis_pal(option="C")(3)[1:2])
 
-exmpl.plot <- ggplot(exmpl.df1.full, aes(x = fct_rev(id), y = end, col = fct_rev(id))) +
+exmpl.plot <- ggplot(my.df1.out, aes(x = fct_rev(id), y = end, col = fct_rev(id))) +
   geom_errorbar(aes(ymin = start, ymax = end + 1), width = 0.3,
                 position = position_dodge2(width = 1), size = 0.8) +
   scale_color_manual(values = cols, name = "id") +
-  scale_y_continuous(breaks = seq(1:max(iv.df$end))) +
+  scale_y_continuous(breaks = seq(1:max(my.df1.out$end))) +
   coord_flip() +
   theme_void() +
   facet_wrap(vars(fct_rev(version))) +
   guides(colour = guide_legend(reverse=T)) +
   theme(plot.margin = unit(rep(0.5, 4), "cm"), legend.position = "none")
 
-pdf("chop_intervals_illustration.pdf", 5.5,2)
+png("../demo/chop_intervals_illustration.png", width = 2000,
+    height = 800, res = 400)
 exmpl.plot
 dev.off()
-
-
-
-
-plotNAs(na.df)
-plotGroupedNAs(na.df, year)
-iv.df2 <- chopIntervals(iv.df, id, "start", "end")
-
-
-
-plotNAs <- function(data){
-  sumNAs <- function(x){sum(is.na(x))}
-  na.count <- data %>%
-    dplyr::summarize_all(sumNA) %>%
-    mutate(idv = 1) %>%
-    melt(., id.vars = "idv")
-
-  p <- ggplot(na.count, aes(y = variable, x = value)) +
-    geom_bar(stat = "identity") +
-    scale_x_continuous(name = "missing obs.") +
-    theme_GS()
-  return(p)
-}
-
-
-
-
