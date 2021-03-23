@@ -8,15 +8,14 @@
 ##'
 
 plotNAs <- function(data){
-  sumNAs <- function(x){sum(is.na(x))}
-  na.count <- data %>%
-    dplyr::summarize_all(sumNA) %>%
+  na.share <- data %>%
+    dplyr::summarize_all(function(x){sum(is.na(x))/length(x)}) %>%
     mutate(idv = 1) %>%
-    melt(., id.vars = "idv")
+    pivot_longer(names_to = "variable", values_to = "value", cols = -idv)
 
-  p <- ggplot(na.count, aes(y = variable, x = value)) +
+  p <- ggplot(na.share, aes(y = variable, x = value)) +
     geom_bar(stat = "identity") +
-    scale_x_continuous(name = "missing obs.") +
-    theme_GS()
+    scale_x_continuous(name = "share missing", breaks = seq(0, 1, 0.1), limits = c(0, 1)) +
+    theme_classic()
   return(p)
 }

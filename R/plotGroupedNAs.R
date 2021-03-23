@@ -14,18 +14,20 @@ plotGroupedNAs <- function(data, groupvar){
   shareNAs <- function(x){sum(is.na(x)) / length(x)}
 
   ## ... Compute and plot share of missing values by grouping variable
-  q.groupvar <- enquo(groupvar)
+  q.groupvar <-  rlang::enquo(groupvar)
   na.share <- data %>%
     group_by(!!q.groupvar) %>%
     dplyr::summarize_all(shareNAs) %>%
-    melt(id.vars = quo_name(q.groupvar))
+    reshape2::melt(id.vars = quo_name(q.groupvar))
 
   p <- ggplot(na.share, aes(x=!!q.groupvar, y=variable, fill=value)) +
-    theme_minimal() +
-    geom_tile() +
-    scale_fill_viridis(name = "% missing") +
+    theme_classic() +
+    geom_tile(alpha=0.9) +
+    viridis::scale_fill_viridis(name = "share missing", limits = c(0,1)) +
     theme(axis.text.x = element_text(angle = 90),
           axis.ticks.x = element_blank())
   return(p)
 }
+
+
 

@@ -31,10 +31,10 @@ chopIntervals <- function(data, id, start.col, end.col){
     mutate(end_next = lead(end),
            val_next = lead(val)) %>%
     filter(!is.na(end_next)) %>%
-    mutate(start_new = ifelse(!end, val, val + 1),
-           end_new = ifelse(!end_next, val_next - 1, val_next)) %>%
-    filter(end_new >= start_new) %>%
-    dplyr::select(!!q.id, start_new, end_new) %>%
-    mutate(start_new = convFun(start_new),
-           end_new = convFun(end_new))
+    mutate(start = ifelse(!end, val, val + 1),
+           end = ifelse(!end_next, val_next - 1, val_next)) %>%
+    filter(end >= start) %>%
+    dplyr::select(!!q.id, start, end) %>%
+    mutate(start = convFun(start),
+           end = convFun(end))
 }
