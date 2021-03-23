@@ -60,6 +60,8 @@ unionDFs(my.df1, my.df2, c("id", "start", "end"), c("id", "start", "stop"))
 ## `chopIntervals`: Break down overlapping intervals in data frame into non-overlapping ones
 This function allows you to "chop" overlapping intervals in a dataframe (date or integer) into non-overlapping (i.e. consecutive) ones. Input must be an R data.frame (or tibble) with an id variable and two columns denoting the start and the end of an interval. To illustrate the procedure, see the figure and code below.
 
+![chopIntervals](/demo/chop_intervals_illustration.png?raw=true "chopIntervals")
+
 ```r
 ## Recall first example dataframe with overlapping intervals
 my.df1
@@ -176,6 +178,8 @@ my.df6$var3 <- ifelse(sample(c(T, F), size = out.len,
 ## Plot NA's
 plotNAs(my.df6)
 ```
+![plotNAs](/demo/plotNAs.png?raw=true "plotNAs")
+
 
 ## `plotGroupedNAs`: Plot share of grouped NA values by variable
 This function does the same as the previous one, but summarizes the missing values by a grouping variable, to give a better sense of their distribution (example: share of missing values for each variable per year). Returns a tile plot with colors indicating share of missings in each variable-group combination.
@@ -183,3 +187,6 @@ This function does the same as the previous one, but summarizes the missing valu
 ```r
 plotGroupedNAs(my.df6, year)
 ```
+![plotGroupedNAs](/demo/plotGroupedNAs.png?raw=true "plotGroupedNAs")
+
+
