@@ -157,7 +157,7 @@ head(exmpl.df4.out)
 ```
 
 ## `plotNAs`: Plot share of NA values by variable
-This is a simple function that plots the share of missing values in a data frame for each variable. Returns a bar plot with bars indicating share of missings (no bars: no missings).
+This is a simple function that plots the share of missing values in a data frame for each variable. Returns a bar plot with bars indicating share of missings.
 
 ```r
 ## Create example dataframe with three random variables
