@@ -1,7 +1,7 @@
 # dprtools
 Guy Schvitz, March 23 2021
 
-This package includes a set of functions that help simplify data pre-processing in R and are particularly suited for dealing with interval or timeseries data. This document walks you through the main functions with some illustrative examples. 
+This package includes a set of functions that help simplify data pre-processing in R and are particularly suited for dealing with interval or time series data. This document walks you through the main functions with some illustrative examples. 
 
 ## Contents
   * [Installation](#installation)
