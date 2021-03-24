@@ -18,7 +18,15 @@ You can install the package as follows:
 library(devtools)
 install_github("guyschvitz/dprtools")
 ```
-You also need to install `dplyr` and `ggplot2` from CRAN (or alternatively `tidyverse`, which includes both), as well as the `viridis` package
+You also need to install `dplyr` and `ggplot2` from CRAN (or alternatively `tidyverse`, which includes both), as well as the `viridis` package, if not already installed
+
+```r
+sapply(c("tidyverse", "viridis"), function(x){
+         if(!x %in% installed.packages()[,"Package"]){install.packages(x)}})
+library(tidyverse)
+library(viridis)
+library(dprtools)
+```
 
 ## `unionDFs`: Union data frames with non-matching columns
 This function allows you to union two data frames with different column names and/or number of columns, as long as the specified columns have the same types. This is illustrated below with two example datasets
