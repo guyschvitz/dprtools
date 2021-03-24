@@ -141,12 +141,8 @@ my.df4 <- data.frame(id = "Switzerland",
                         end = as.Date("2020-01-01"))
 
 ## Create yearly series
-my.df4.out <- generateSeries(data = my.df4,
-                             start = "start",
-                             end = "end",
-                             step = 1,
-                             timeint = "year",
-                             varname = "date")
+my.df4.out <- generateSeries(data = my.df4, start = "start", end = "end",
+                              step = 1, timeint = "year", varname = "date")
 
 ## Preview results
 head(exmpl.df4.out)
