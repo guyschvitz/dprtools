@@ -82,7 +82,7 @@ my.df1
 # b     9  12
 
 ## Chop into consecutive intervals
-chopIntervals(data = my.df1, id = id, start.col = "start", end.col = "end")
+chopIntervals(data = my.df1, id = "id", start.col = start, end.col = end)
 
 # id    start   end
 # a         1     2
@@ -99,7 +99,7 @@ my.df5 <- data.frame(id = rep("a", 3),
                      end = as.Date(c("1996-01-10", "2001-08-01", "2020-03-23")))
 
 ## Chop into consecutive date intervals
-chopIntervals(my.df5, id = id, start.col = "start", end.col = "end")
+chopIntervals(my.df5, id = "id", start.col = start, end.col = end)
 
 # id    start      end       
 # a     1990-01-01 1995-09-07
