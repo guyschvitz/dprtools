@@ -1,15 +1,15 @@
 # dprtools
 Guy Schvitz, March 23 2021
 
-This package includes a set of functions that help simplify data pre-processing in R and are particularly suited for dealing with interval or time-series data. This document walks you through the main functions with some illustrative examples. 
+This package includes a set of functions that help simplify data pre-processing in R and are particularly suited for dealing with interval or time series data. This document walks you through the main functions with some illustrative examples. 
 
 ## Contents
-- [Installation](#installation)
-- [`unionDFs`: Union data frames with non-matching columns](#-uniondfs---union-data-frames-with-non-matching-columns)
-- [`chopIntervals`: Break down overlapping intervals in data frame into non-overlapping ones](#-chopintervals---break-down-overlapping-intervals-in-data-frame-into-non-overlapping-ones)
-- [`generateSeries`: Expand interval data frame into series](#-generateseries---expand-interval-data-frame-into-series)
-- [`plotNAs`: Plot share of NA values by variable](#-plotnas---plot-share-of-na-values-by-variable)
-- [`plotGroupedNAs`: Plot share of grouped NA values by variable](#-plotgroupednas---plot-share-of-grouped-na-values-by-variable)
+  * [Installation](#installation)
+  * [`unionDFs`: Union data frames with non-matching columns](#-uniondfs---union-data-frames-with-non-matching-columns)
+  * [`chopIntervals`: Break down overlapping intervals in data frame into non-overlapping ones](#-chopintervals---break-down-overlapping-intervals-in-data-frame-into-non-overlapping-ones)
+  * [`generateSeries`: Expand interval data frame into series](#-generateseries---expand-interval-data-frame-into-series)
+  * [`plotNAs`: Plot share of NA values by variable](#-plotnas---plot-share-of-na-values-by-variable)
+  * [`plotGroupedNAs`: Plot share of grouped NA values by variable](#-plotgroupednas---plot-share-of-grouped-na-values-by-variable)
 
 ## Installation
 You can install the package as follows:
@@ -18,7 +18,15 @@ You can install the package as follows:
 library(devtools)
 install_github("guyschvitz/dprtools")
 ```
-You also need to install `dplyr` and `ggplot2` from CRAN (or alternatively `tidyverse`, which includes both), as well as the `viridis` package
+You also need to install `dplyr` and `ggplot2` from CRAN (or alternatively `tidyverse`, which includes both), as well as the `viridis` package, if not already installed
+
+```r
+sapply(c("tidyverse", "viridis"), function(x){
+         if(!x %in% installed.packages()[,"Package"]){install.packages(x)}})
+library(tidyverse)
+library(viridis)
+library(dprtools)
+```
 
 ## `unionDFs`: Union data frames with non-matching columns
 This function allows you to union two data frames with different column names and/or number of columns, as long as the specified columns have the same types. This is illustrated below with two example datasets
@@ -59,6 +67,8 @@ unionDFs(my.df1, my.df2, c("id", "start", "end"), c("id", "start", "stop"))
 
 ## `chopIntervals`: Break down overlapping intervals in data frame into non-overlapping ones
 This function allows you to "chop" overlapping intervals in a dataframe (date or integer) into non-overlapping (i.e. consecutive) ones. Input must be an R data.frame (or tibble) with an id variable and two columns denoting the start and the end of an interval. To illustrate the procedure, see the figure and code below.
+
+<img src="/demo/chop_intervals_illustration.png?raw=true" width="700">
 
 ```r
 ## Recall first example dataframe with overlapping intervals
@@ -131,12 +141,8 @@ my.df4 <- data.frame(id = "Switzerland",
                         end = as.Date("2020-01-01"))
 
 ## Create yearly series
-my.df4.out <- generateSeries(data = my.df4,
-                             start = "start",
-                             end = "end",
-                             step = 1,
-                             timeint = "year",
-                             varname = "date")
+my.df4.out <- generateSeries(data = my.df4, start = "start", end = "end",
+                              step = 1, timeint = "year", varname = "date")
 
 ## Preview results
 head(exmpl.df4.out)
@@ -151,7 +157,7 @@ head(exmpl.df4.out)
 ```
 
 ## `plotNAs`: Plot share of NA values by variable
-This is a simple function that plots the share of missing values in a data frame for each variable. Returns a bar plot with bars indicating share of missings (no bars: no missings).
+This is a simple function that plots the share of missing values in a data frame for each variable. Returns a bar plot with bars indicating share of missings.
 
 ```r
 ## Create example dataframe with three random variables
@@ -177,9 +183,15 @@ my.df6$var3 <- ifelse(sample(c(T, F), size = out.len,
 plotNAs(my.df6)
 ```
 
+<img src="/demo/plotNAs.png?raw=true" width="700">
+
+
 ## `plotGroupedNAs`: Plot share of grouped NA values by variable
 This function does the same as the previous one, but summarizes the missing values by a grouping variable, to give a better sense of their distribution (example: share of missing values for each variable per year). Returns a tile plot with colors indicating share of missings in each variable-group combination.
 
 ```r
 plotGroupedNAs(my.df6, year)
 ```
+<img src="/demo/plotGroupedNAs.png?raw=true" width="700">
+
+
