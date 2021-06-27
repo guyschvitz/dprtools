@@ -147,7 +147,7 @@ my.df6$var2 <- ifelse(sample(c(T, F), size = out.len,
 my.df6$var3 <- ifelse(sample(c(T, F), size = out.len,
                                 replace = T, prob = c(0.6, 0.4)), my.df6$var3, NA)
 
-## Plot NA's
+## Plot NA values
 plotNAs(my.df6)
 
 png("../demo/plotNAs.png", width=2000, height = 1000, res = 300)
@@ -158,9 +158,11 @@ png("../demo/plotGroupedNAs.png", width=2000, height = 1000, res = 300)
 plotGroupedNAs(my.df6, year)
 dev.off()
 
+## Plot grouped NA values (by year)
+plotGroupedNAs(my.df6, year)
 
 ################################################################################
-## Demonstrate functions
+## Show example graph "chop intervals"
 ################################################################################
 
 ## Chop Intervals

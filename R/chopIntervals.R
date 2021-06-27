@@ -3,38 +3,30 @@
 ##' Function to chop overlapping ranges (date or integer) into non-overlapping ones
 ##'
 ##' @param data R data.frame or tibble
-##' @param id Id variable (function assumes grouped values)
-##' @param start col Variable defining start of interval
-##' @param start col Variable defining end of interval
+##' @param id A string specifying the name of the id column(s) used to group dataframe
+##' @param start.col Column defining start of interval
+##' @param start.col Column defining end of interval
 ##'
-##' @return Dataframe containing series
+##' @return Grouped dataframe containing "chopped" (i.e. non-overlapping) intervals
 ##'
 ##' @export
 
-chopIntervals <- function(data, id, start.col, end.col){
-  q.id <- enquo(id)
-  is.date <- inherits(data[, start.col], "Date")
-  convFun <- function(x){
-    if(is.date){as.Date(x, origin = "1970-01-01")
-    }else{
-      as.numeric(x)}
-  }
-
+chopIntervals <- function(data, id.vars, start.col, end.col){
   data %>%
-    dplyr::select(c(!!q.id, {{start.col}}, {{end.col}})) %>%
-    gather(var, val, -!!q.id) %>%
-    mutate(end = ifelse(var=={{end.col}}, T,
-                        ifelse(var == {{start.col}}, F, NA))) %>%
-    group_by(!!q.id) %>%
-    arrange(!!q.id, val) %>%
+    dplyr::select(c(all_of(id.vars), {{start.col}}, {{end.col}})) %>%
+    pivot_longer(names_to = "var", values_to = "val", c(start.col, end.col)) %>%
+    mutate(end = if_else(var==end.col, T,
+                         if_else(var == start.col, F, NA))) %>%
+    group_by_at(id.vars) %>%
+    arrange_at(c(id.vars, "val")) %>%
     distinct() %>%
     mutate(end_next = lead(end),
            val_next = lead(val)) %>%
     filter(!is.na(end_next)) %>%
-    mutate(start = ifelse(!end, val, val + 1),
-           end = ifelse(!end_next, val_next - 1, val_next)) %>%
+    mutate(start = if_else(!end, val, val + 1),
+           end = if_else(!end_next, val_next - 1, val_next)) %>%
     filter(end >= start) %>%
-    dplyr::select(!!q.id, start, end) %>%
-    mutate(start = convFun(start),
-           end = convFun(end))
+    dplyr::select(all_of(id.vars), start, end)
 }
+
+
